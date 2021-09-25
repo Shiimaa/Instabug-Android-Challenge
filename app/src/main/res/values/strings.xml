@@ -2,5 +2,7 @@
     <string name="app_name">Instabug Android Challenge</string>
 
     <string name="home_title">Android Challenge</string>
-    <string name="no_dat">There is an error now, Please try later</string>
+    <string name="no_data">There is an error now, Please try later</string>
+    <string name="no_results">No results</string>
+    <string name="search_hint">Search....</string>
 </resources>

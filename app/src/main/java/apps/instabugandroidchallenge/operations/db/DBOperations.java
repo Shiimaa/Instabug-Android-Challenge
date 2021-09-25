@@ -79,6 +79,31 @@ public class DBOperations {
         return selectedWords;
     }
 
+    public List<Word> searchOnText(String text) {
+        List<Word> selectedWords = new ArrayList<>();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("select * from " + DBHelper.WEBSITE_CONTENT_TABLE_NAME + " WHERE "
+                        + DBHelper.WEBSITE_CONTENT_COLUMN_WORD_NAME + " LIKE '%" + text + "%'"
+                        + " ORDER BY " + DBHelper.WEBSITE_CONTENT_COLUMN_WORD_COUNT + " DESC"
+                , null);
+
+        if (cursor.moveToFirst()) {
+            while (!cursor.isAfterLast()) {
+                Word word = new Word();
+                word.setId(cursor.getInt(cursor.getColumnIndex(DBHelper.WEBSITE_CONTENT_COLUMN_ID)));
+                word.setName(cursor.getString(cursor.getColumnIndex(DBHelper.WEBSITE_CONTENT_COLUMN_WORD_NAME)));
+                word.setCount(cursor.getInt(cursor.getColumnIndex(DBHelper.WEBSITE_CONTENT_COLUMN_WORD_COUNT)));
+
+                selectedWords.add(word);
+                cursor.moveToNext();
+            }
+        }
+
+        cursor.close();
+
+        return selectedWords;
+    }
+
     public List<Word> getAllWordsAscending() {
         List<Word> selectedWords = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();

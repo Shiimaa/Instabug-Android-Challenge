@@ -1,6 +1,8 @@
 package apps.instabugandroidchallenge.ui;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,6 +17,8 @@ import apps.instabugandroidchallenge.operations.WebSiteDataOperations;
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private WordsAdapter wordsAdapter;
+    private boolean isDescending = true;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +28,42 @@ public class MainActivity extends AppCompatActivity {
 
         setupRecyclerView();
         loadData();
+        addListeners();
+    }
+
+    private void addListeners() {
+        binding.homeSearchEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                loadSearchData(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+    }
+
+    private void loadSearchData(String searchText) {
+        binding.homeProgress.setVisibility(View.VISIBLE);
+        binding.homeRecycler.setVisibility(View.GONE);
+        WebSiteDataOperations.searchOnText(searchText, parsedWords -> AppQueues.postToUiHandler(() -> {
+            binding.homeProgress.setVisibility(View.GONE);
+            if (parsedWords.size() > 0) {
+                binding.homeRecycler.setVisibility(View.VISIBLE);
+                binding.homeNoDataTextview.setVisibility(View.GONE);
+                wordsAdapter.updateData(parsedWords);
+            } else {
+                binding.homeNoDataTextview.setText(R.string.no_results);
+                binding.homeNoDataTextview.setVisibility(View.VISIBLE);
+            }
+        }));
     }
 
     private void setupRecyclerView() {
@@ -42,8 +82,19 @@ public class MainActivity extends AppCompatActivity {
                     binding.homeRecycler.setVisibility(View.VISIBLE);
                     wordsAdapter.updateData(parsedWords);
                 } else {
-                    binding.homeNoDataTextview.setVisibility(View.VISIBLE);
-                    binding.homeProgress.setVisibility(View.GONE);
+                    WebSiteDataOperations.getDataDescending(parsedWords1 -> {
+                        AppQueues.postToUiHandler(() -> {
+                            if (parsedWords1.size() > 0) {
+                                binding.homeProgress.setVisibility(View.GONE);
+                                binding.homeRecycler.setVisibility(View.VISIBLE);
+                                wordsAdapter.updateData(parsedWords1);
+
+                            } else {
+                                binding.homeNoDataTextview.setVisibility(View.VISIBLE);
+                                binding.homeProgress.setVisibility(View.GONE);
+                            }
+                        });
+                    });
                 }
             });
 
@@ -51,10 +102,34 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void search(View view) {
-
+        binding.homeToolbar.setVisibility(View.GONE);
+        binding.homeSearchContainer.setVisibility(View.VISIBLE);
     }
 
     public void sortData(View view) {
+        if (isDescending) {
+            isDescending = false;
+            WebSiteDataOperations.getDataAscending(parsedWords ->
+                    AppQueues.postToUiHandler(() -> wordsAdapter.updateData(parsedWords)));
+        } else {
+            isDescending = true;
+            WebSiteDataOperations.getDataDescending(parsedWords ->
+                    AppQueues.postToUiHandler(() -> wordsAdapter.updateData(parsedWords)));
+        }
+    }
 
+    public void removeSearchText(View view) {
+        binding.homeSearchEditText.setText("");
+    }
+
+    public void closeSearchBar(View view) {
+        binding.homeToolbar.setVisibility(View.VISIBLE);
+        binding.homeSearchContainer.setVisibility(View.GONE);
+        binding.homeNoDataTextview.setVisibility(View.GONE);
+        binding.homeNoDataTextview.setText(R.string.no_data);
+        binding.homeRecycler.setVisibility(View.VISIBLE);
+        binding.homeSearchEditText.setText("");
+        WebSiteDataOperations.getDataDescending(parsedWords ->
+                AppQueues.postToUiHandler(() -> wordsAdapter.updateData(parsedWords)));
     }
 }

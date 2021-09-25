@@ -33,6 +33,27 @@ public class WebSiteDataOperations {
 
     }
 
+    public static void getDataAscending(OnDataLoaded onDataLoaded) {
+        if (onDataLoaded == null)
+            throw new RuntimeException("OnDataLoaded is Null!");
+        AppQueues.postToDbHandler(() -> onDataLoaded.onDataLoaded(DBOperations.getInstance().getAllWordsAscending()));
+
+    }
+
+    public static void getDataDescending(OnDataLoaded onDataLoaded) {
+        if (onDataLoaded == null)
+            throw new RuntimeException("OnDataLoaded is Null!");
+        AppQueues.postToDbHandler(() -> onDataLoaded.onDataLoaded(DBOperations.getInstance().getAllWords()));
+
+    }
+
+    public static void searchOnText(String text, OnDataLoaded onDataLoaded) {
+        if (onDataLoaded == null)
+            throw new RuntimeException("OnDataLoaded is Null!");
+        AppQueues.postToDbHandler(() -> onDataLoaded.onDataLoaded(DBOperations.getInstance().searchOnText(text)));
+
+    }
+
     private static List<Word> parseWebsiteContent(String body) {
 
         List<Word> words = new ArrayList<>();

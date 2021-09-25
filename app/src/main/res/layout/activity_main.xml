@@ -14,48 +14,94 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/home_toolbar"
+        <FrameLayout
+            android:id="@+id/toolbar_container"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <RelativeLayout
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/home_toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="?attr/actionBarSize">
 
-                <TextView
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:text="@string/home_title"
+                        android:textColor="@color/white" />
+
+
+                    <ImageView
+                        android:id="@+id/home_sort_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:onClick="sortData"
+                        android:padding="10dp"
+                        android:src="@drawable/ic_sort" />
+
+                    <ImageView
+                        android:id="@+id/home_search_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toStartOf="@id/home_sort_icon"
+                        android:onClick="search"
+                        android:padding="10dp"
+                        android:src="@drawable/ic_search" />
+                </RelativeLayout>
+            </androidx.appcompat.widget.Toolbar>
+
+            <RelativeLayout
+                android:id="@+id/home_search_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/home_search_back_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
-                    android:text="@string/home_title"
-                    android:textColor="@color/white" />
+                    android:onClick="closeSearchBar"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_back" />
 
+                <EditText
+                    android:id="@+id/home_search_edit_text"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_toStartOf="@id/home_search_remove_text_button"
+                    android:layout_toEndOf="@id/home_search_back_button"
+                    android:background="@null"
+                    android:hint="@string/search_hint"
+                    android:paddingStart="6dp"
+                    android:paddingEnd="6dp"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white" />
 
                 <ImageView
-                    android:id="@+id/home_sort_icon"
+                    android:id="@+id/home_search_remove_text_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:onClick="sortData"
+                    android:onClick="removeSearchText"
                     android:padding="10dp"
-                    android:src="@drawable/ic_sort" />
-
-                <ImageView
-                    android:id="@+id/home_search_icon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toStartOf="@id/home_sort_icon"
-                    android:onClick="search"
-                    android:padding="10dp"
-                    android:src="@drawable/ic_search" />
+                    android:src="@drawable/ic_close" />
             </RelativeLayout>
-        </androidx.appcompat.widget.Toolbar>
+        </FrameLayout>
 
         <ProgressBar
             android:id="@+id/home_progress"
@@ -71,7 +117,7 @@
             android:id="@+id/home_no_data_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/no_dat"
+            android:text="@string/no_data"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -83,7 +129,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/home_toolbar"
+            app:layout_constraintTop_toBottomOf="@id/toolbar_container"
             tools:listitem="@layout/layout_home_item" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
