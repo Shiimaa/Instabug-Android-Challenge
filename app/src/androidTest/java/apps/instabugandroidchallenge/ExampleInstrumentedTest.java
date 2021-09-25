@@ -8,6 +8,11 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.List;
+
+import apps.instabugandroidchallenge.model.Word;
+import apps.instabugandroidchallenge.operations.db.DBOperations;
+
 import static org.junit.Assert.*;
 
 /**
@@ -22,5 +27,11 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
         assertEquals("apps.instabugandroidchallenge", appContext.getPackageName());
+    }
+
+    @Test
+    public void loadDataWithEmptyString() {
+        List<Word> content = DBOperations.getInstance().getAllWords();
+        assertEquals(content.size(), 401);
     }
 }

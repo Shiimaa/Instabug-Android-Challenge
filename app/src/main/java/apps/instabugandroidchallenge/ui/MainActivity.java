@@ -20,7 +20,6 @@ public class MainActivity extends AppCompatActivity {
     private WordsAdapter wordsAdapter;
     private boolean isDescending = true;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,22 +48,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-    }
-
-    private void loadSearchData(String searchText) {
-        binding.homeProgress.setVisibility(View.VISIBLE);
-        binding.homeRecycler.setVisibility(View.GONE);
-        WebSiteDataOperations.searchOnText(searchText, parsedWords -> AppQueues.postToUiHandler(() -> {
-            binding.homeProgress.setVisibility(View.GONE);
-            if (parsedWords.size() > 0) {
-                binding.homeRecycler.setVisibility(View.VISIBLE);
-                binding.homeNoDataTextview.setVisibility(View.GONE);
-                wordsAdapter.updateData(parsedWords);
-            } else {
-                binding.homeNoDataTextview.setText(R.string.no_results);
-                binding.homeNoDataTextview.setVisibility(View.VISIBLE);
-            }
-        }));
     }
 
     private void setupRecyclerView() {
@@ -109,6 +92,22 @@ public class MainActivity extends AppCompatActivity {
         // open keyboard
         binding.homeSearchEditText.requestFocus();
         CommonMethods.openKeyboard(this);
+    }
+
+    private void loadSearchData(String searchText) {
+        binding.homeProgress.setVisibility(View.VISIBLE);
+        binding.homeRecycler.setVisibility(View.GONE);
+        WebSiteDataOperations.searchOnText(searchText, parsedWords -> AppQueues.postToUiHandler(() -> {
+            binding.homeProgress.setVisibility(View.GONE);
+            if (parsedWords.size() > 0) {
+                binding.homeRecycler.setVisibility(View.VISIBLE);
+                binding.homeNoDataTextview.setVisibility(View.GONE);
+                wordsAdapter.updateData(parsedWords);
+            } else {
+                binding.homeNoDataTextview.setText(R.string.no_results);
+                binding.homeNoDataTextview.setVisibility(View.VISIBLE);
+            }
+        }));
     }
 
     public void sortData(View view) {

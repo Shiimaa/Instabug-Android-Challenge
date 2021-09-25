@@ -7,6 +7,7 @@ import org.jsoup.nodes.Element;
 import java.io.IOException;
 
 public class NetworkOperations {
+
     public static String getWebSiteContent(String url) {
         String body = "";
         try {

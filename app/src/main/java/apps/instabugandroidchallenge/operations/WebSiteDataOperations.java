@@ -25,7 +25,6 @@ public class WebSiteDataOperations {
                 List<Word> words = parseWebsiteContent(websiteContent);
                 AppQueues.postToDbHandler(() -> saveDataToDb(words));
                 onDataLoaded.onDataLoaded(words);
-
             } else {
                 AppQueues.postToDbHandler(() -> onDataLoaded.onDataLoaded(DBOperations.getInstance().getAllWords()));
             }
@@ -43,6 +42,7 @@ public class WebSiteDataOperations {
     public static void getDataDescending(OnDataLoaded onDataLoaded) {
         if (onDataLoaded == null)
             throw new RuntimeException("OnDataLoaded is Null!");
+
         AppQueues.postToDbHandler(() -> onDataLoaded.onDataLoaded(DBOperations.getInstance().getAllWords()));
 
     }
@@ -54,7 +54,7 @@ public class WebSiteDataOperations {
 
     }
 
-    private static List<Word> parseWebsiteContent(String body) {
+    public static List<Word> parseWebsiteContent(String body) {
 
         List<Word> words = new ArrayList<>();
 
