@@ -7,6 +7,7 @@ import org.jsoup.nodes.Element;
 import java.io.IOException;
 
 public class NetworkOperations {
+    public static boolean isNetworkError = false;
 
     public static String getWebSiteContent(String url) {
         String body = "";
@@ -15,6 +16,7 @@ public class NetworkOperations {
             Element element = document.body();
             body = element.text();
         } catch (IOException e) {
+            isNetworkError = true;
             e.printStackTrace();
         }
         return body;

@@ -13,6 +13,7 @@ import apps.instabugandroidchallenge.R;
 import apps.instabugandroidchallenge.appQueues.AppQueues;
 import apps.instabugandroidchallenge.databinding.ActivityMainBinding;
 import apps.instabugandroidchallenge.operations.WebSiteDataOperations;
+import apps.instabugandroidchallenge.operations.network.NetworkOperations;
 import apps.instabugandroidchallenge.utils.CommonMethods;
 
 public class MainActivity extends AppCompatActivity {
@@ -72,8 +73,13 @@ public class MainActivity extends AppCompatActivity {
                                 binding.homeProgress.setVisibility(View.GONE);
                                 binding.homeRecycler.setVisibility(View.VISIBLE);
                                 wordsAdapter.updateData(parsedWords1);
-
                             } else {
+                                if (NetworkOperations.isNetworkError) {
+                                    binding.homeNoDataTextview.setText(R.string.network_error);
+                                    NetworkOperations.isNetworkError = false;
+                                } else
+                                    binding.homeNoDataTextview.setText(R.string.no_results);
+
                                 binding.homeNoDataTextview.setVisibility(View.VISIBLE);
                                 binding.homeProgress.setVisibility(View.GONE);
                             }
@@ -130,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
         binding.homeToolbar.setVisibility(View.VISIBLE);
         binding.homeSearchContainer.setVisibility(View.GONE);
         binding.homeNoDataTextview.setVisibility(View.GONE);
-        binding.homeNoDataTextview.setText(R.string.no_data);
+        binding.homeNoDataTextview.setText(R.string.network_error);
         binding.homeRecycler.setVisibility(View.VISIBLE);
         binding.homeSearchEditText.setText("");
 
