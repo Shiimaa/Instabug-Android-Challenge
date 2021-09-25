@@ -13,6 +13,7 @@ import apps.instabugandroidchallenge.R;
 import apps.instabugandroidchallenge.appQueues.AppQueues;
 import apps.instabugandroidchallenge.databinding.ActivityMainBinding;
 import apps.instabugandroidchallenge.operations.WebSiteDataOperations;
+import apps.instabugandroidchallenge.utils.CommonMethods;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
@@ -104,6 +105,10 @@ public class MainActivity extends AppCompatActivity {
     public void search(View view) {
         binding.homeToolbar.setVisibility(View.GONE);
         binding.homeSearchContainer.setVisibility(View.VISIBLE);
+
+        // open keyboard
+        binding.homeSearchEditText.requestFocus();
+        CommonMethods.openKeyboard(this);
     }
 
     public void sortData(View view) {
@@ -129,6 +134,10 @@ public class MainActivity extends AppCompatActivity {
         binding.homeNoDataTextview.setText(R.string.no_data);
         binding.homeRecycler.setVisibility(View.VISIBLE);
         binding.homeSearchEditText.setText("");
+
+        // close keyboard
+        CommonMethods.closeKeyboard(this);
+
         WebSiteDataOperations.getDataDescending(parsedWords ->
                 AppQueues.postToUiHandler(() -> wordsAdapter.updateData(parsedWords)));
     }
